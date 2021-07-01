@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const mongoose = require('mongoose')
+
+const Product = require('../models/product')
 
 // app.js - /products --> /products/products
 router.get('/', (req, res, next) => {
@@ -9,10 +12,23 @@ router.get('/', (req, res, next) => {
 })   
 
 router.post('/', (req, res, next) => {
-    const product = {
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         quantity: req.body.quantity
-    }
+    })
+
+    product
+    .save()
+    .then(result => {
+        console.log(result)
+        res.status(200).json(result)
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({error: err})
+    })
+
     res.status(200).json({
         message: "Handling POST requests to /products",
         createdProduct: product
@@ -26,17 +42,16 @@ router.post('/', (req, res, next) => {
 // /products/{something}
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId
-    if(id === 'special') {
-        res.status(200).json({
-            message: 'You have a Special ID',
-            id: id
-        })
-    } else {
-        res.status(200).json({
-            message: 'You have an Ordinary ID',
-            id: id
-        })
-    }
+    Product.findById(id)
+    .exec()
+    .then(doc => {
+        console.log(doc)
+        res.status(200).json(doc)
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({error: err})
+    })
 })
 
 // Patch/Edit the products

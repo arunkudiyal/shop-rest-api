@@ -2,6 +2,7 @@
 
 const express = require('express')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
 const app = express()
@@ -9,6 +10,9 @@ const app = express()
 // Manaage my routes
 const productsRoute = require('./api/routes/products')
 // const ordersRoute = require('./api/routes/orders')
+
+// CONNECT THE DATABASE
+mongoose.connect('mongodb+srv://arunkudiyal:' + 'examplepwd' + '@cluster0.2pssb.mongodb.net/shop-rest?retryWrites=true&w=majority')
 
 // Log the route in the console before it reaches to the app.use()
 app.use(morgan('dev'))
