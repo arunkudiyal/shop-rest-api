@@ -2,6 +2,8 @@
 
 const express = require('express')
 const morgan = require('morgan')
+const bodyParser = require('body-parser')
+
 const app = express()
 
 // Manaage my routes
@@ -10,6 +12,11 @@ const productsRoute = require('./api/routes/products')
 
 // Log the route in the console before it reaches to the app.use()
 app.use(morgan('dev'))
+
+// body-parser being used a middleware & we are configuring it
+// response will be coming as urlencoded & in format of JSON
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
 // USING THE ROUTES
 app.use('/products', productsRoute)
